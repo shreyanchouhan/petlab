@@ -1,0 +1,4 @@
+# Demo copy of the PETLAB site. The live site is petlab.in; keep this one
+# out of search results so the two never compete for the same queries.
+User-agent: *
+Disallow: /
