@@ -39,6 +39,9 @@ before launch.
 | File | Source |
 |---|---|
 | `photos/pet-cow.jpg`, `photos/pet-horse-head.jpg` | Supplied by the Petlab team for the gallery (`unnamed.jpg`, `unnamed-1.jpg`), 512px wide. Source and usage rights not recorded here — confirm before launch. |
+| `photos/hero-clinic.*` (v3), `illustrations/software-scene.*` (v2) | Renders supplied by the team via Drive (2026-10-16): the open-case hero for index.html and the app-plus-dashboard scene for duo.html's software section. The software render bakes in the handwritten captions, so the HTML script overlays were removed. |
+| `photos/care-clinic.*`, `photos/care-home.*`, `photos/care-camp.*`, `photos/care-hospital.*`, `photos/care-research.*` | Renders supplied by the team (Drive folder "2.3 Whereever care happens", 2026-10-16), resized from PNG to JPEG/WebP. The five "Diagnostics near you" cards on index.html; the hospital and research photos replace the earlier `illustrations/care-hospital.svg` and `care-research.svg`. |
+| `photos/pet-mouse.jpg`, `photos/pet-mouse.webp` | Etsy listing product photo (etsy.com/listing/598311116, needle-felted pet mouse), 2043x3000 resized to 1500px. Seller's copyrighted product photo — no licence obtained; confirm rights or replace before launch. Replaces `pet-husky.jpg` in the index.html gallery. |
 
 ## Rights
 
