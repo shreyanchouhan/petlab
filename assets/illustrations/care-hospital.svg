@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 800" role="img" aria-label="A veterinary hospital ward: a vet monitors a dog on an exam table, with an IV stand, a wall vitals screen and the VETCARE analyser on a trolley.">
+  <defs>
+    <linearGradient id="hw" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F3EDFD"/><stop offset="1" stop-color="#E9DFFA"/>
+    </linearGradient>
+    <linearGradient id="hf" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#DCCEF5"/><stop offset="1" stop-color="#D0BFF0"/>
+    </linearGradient>
+  </defs>
+  <!-- wall and floor -->
+  <rect width="1000" height="800" fill="url(#hw)"/>
+  <rect y="600" width="1000" height="200" fill="url(#hf)"/>
+  <rect y="596" width="1000" height="8" fill="#C7B4EC"/>
+  <!-- window -->
+  <rect x="60" y="100" width="240" height="300" rx="24" fill="#CBB7F0"/>
+  <rect x="74" y="114" width="212" height="272" rx="16" fill="#EFE8FC"/>
+  <path d="M86 330c30-40 54-54 86-54s44 22 100 10v100H86z" fill="#DCCEF5"/>
+  <circle cx="246" cy="170" r="26" fill="#F6E9C9"/>
+  <rect x="176" y="114" width="8" height="272" fill="#CBB7F0"/>
+  <!-- hospital sign -->
+  <rect x="700" y="84" width="220" height="150" rx="22" fill="#FFFFFF"/>
+  <rect x="770" y="118" width="80" height="26" rx="13" fill="#5B3AA8"/>
+  <rect x="797" y="91" width="26" height="80" rx="13" fill="#5B3AA8"/>
+  <circle cx="810" cy="200" r="7" fill="#9D84D6"/>
+  <circle cx="790" cy="190" r="5.4" fill="#9D84D6"/>
+  <circle cx="830" cy="190" r="5.4" fill="#9D84D6"/>
+  <path d="M797 214c0-8 6-13 13-13s13 5 13 13-6 11-13 11-13-3-13-11z" fill="#9D84D6"/>
+  <!-- wall vitals screen -->
+  <rect x="384" y="110" width="250" height="160" rx="18" fill="#3B2178"/>
+  <polyline points="404,196 444,196 458,160 472,226 486,182 506,196 544,196 558,172 572,196 614,196"
+            fill="none" stroke="#9FE8C4" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="404" y="130" width="60" height="12" rx="6" fill="#6A4AB0"/>
+  <rect x="404" y="238" width="96" height="10" rx="5" fill="#553397"/>
+  <!-- IV stand -->
+  <rect x="330" y="240" width="8" height="380" rx="4" fill="#8F77C9"/>
+  <path d="M296 620h76" stroke="#8F77C9" stroke-width="10" stroke-linecap="round"/>
+  <rect x="306" y="248" width="56" height="84" rx="12" fill="#FFFFFF"/>
+  <rect x="306" y="296" width="56" height="36" rx="12" fill="#B9A2E6"/>
+  <path d="M334 332v60c0 40 60 30 92 68" stroke="#8F77C9" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <!-- exam table -->
+  <rect x="368" y="470" width="360" height="26" rx="13" fill="#5B3AA8"/>
+  <rect x="396" y="496" width="16" height="124" rx="7" fill="#7C5CC4"/>
+  <rect x="684" y="496" width="16" height="124" rx="7" fill="#7C5CC4"/>
+  <rect x="380" y="448" width="336" height="30" rx="15" fill="#FFFFFF"/>
+  <!-- dog lying on table -->
+  <path d="M436 446c0-26 26-44 70-44h96c40 0 66 14 72 36 4 14-6 16-24 16H460c-16 0-24-2-24-8z" fill="#C79A6B"/>
+  <path d="M588 402h30c26 0 46 10 54 26l-20 18h-44z" fill="#B9854F"/>
+  <circle cx="648" cy="412" r="24" fill="#C79A6B"/>
+  <path d="M660 390c10-8 22-8 26 2 3 9-4 18-16 20z" fill="#8F5F33"/>
+  <circle cx="658" cy="408" r="4" fill="#3A2412"/>
+  <ellipse cx="674" cy="420" rx="7" ry="5" fill="#3A2412"/>
+  <path d="M438 430c-14-2-22 4-22 12s10 10 20 6" fill="#B9854F"/>
+  <!-- vet figure behind table -->
+  <circle cx="500" cy="282" r="34" fill="#B07A52"/>
+  <path d="M470 272c2-20 18-32 32-32 16 0 30 14 30 34-8-12-20-16-32-16s-24 4-30 14z" fill="#43305E"/>
+  <path d="M444 452c0-62 24-104 58-104s58 42 58 104z" fill="#FFFFFF"/>
+  <path d="M482 348h38v48h-38z" fill="#7C5CC4"/>
+  <path d="M454 372c-16 22-22 48-14 58l38 20 10-22-30-18c4-12 6-26 4-38z" fill="#FFFFFF"/>
+  <path d="M548 372c16 22 24 44 16 56l-44 16-8-22 34-14c-4-12-4-24 2-36z" fill="#FFFFFF"/>
+  <circle cx="484" cy="466" r="12" fill="#B07A52"/>
+  <circle cx="524" cy="458" r="12" fill="#B07A52"/>
+  <!-- stethoscope -->
+  <path d="M486 322c0 18 8 28 16 28s16-10 16-28" fill="none" stroke="#3B2178" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="502" cy="358" r="7" fill="#3B2178"/>
+  <!-- analyser trolley -->
+  <rect x="774" y="420" width="170" height="16" rx="8" fill="#8F77C9"/>
+  <rect x="786" y="436" width="10" height="170" rx="5" fill="#8F77C9"/>
+  <rect x="922" y="436" width="10" height="170" rx="5" fill="#8F77C9"/>
+  <rect x="774" y="520" width="170" height="12" rx="6" fill="#A58DDB"/>
+  <circle cx="794" cy="616" r="12" fill="#6A4AB0"/>
+  <circle cx="924" cy="616" r="12" fill="#6A4AB0"/>
+  <!-- VETCARE analyser -->
+  <rect x="790" y="320" width="140" height="102" rx="18" fill="#FFFFFF"/>
+  <rect x="804" y="336" width="78" height="52" rx="8" fill="#5B3AA8"/>
+  <polyline points="812,372 826,372 834,352 844,380 852,364 874,364" fill="none" stroke="#9FE8C4" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="906" cy="348" r="8" fill="#B9A2E6"/>
+  <rect x="894" y="366" width="24" height="8" rx="4" fill="#E3D7F8"/>
+  <rect x="894" y="380" width="24" height="8" rx="4" fill="#E3D7F8"/>
+  <!-- tube rack on lower shelf -->
+  <rect x="800" y="488" width="76" height="32" rx="6" fill="#E3D7F8"/>
+  <rect x="808" y="470" width="10" height="34" rx="5" fill="#B06AB8"/>
+  <rect x="826" y="470" width="10" height="34" rx="5" fill="#7C5CC4"/>
+  <rect x="844" y="470" width="10" height="34" rx="5" fill="#B06AB8"/>
+  <rect x="862" y="470" width="10" height="34" rx="5" fill="#9FE8C4"/>
+  <!-- floor shadows -->
+  <ellipse cx="548" cy="640" rx="210" ry="20" fill="#C2AEE9" opacity=".55"/>
+  <ellipse cx="860" cy="644" rx="110" ry="16" fill="#C2AEE9" opacity=".5"/>
+  <ellipse cx="334" cy="636" rx="58" ry="12" fill="#C2AEE9" opacity=".5"/>
+  <!-- cat carrier waiting on floor -->
+  <rect x="96" y="540" width="150" height="96" rx="20" fill="#FFFFFF"/>
+  <rect x="112" y="560" width="84" height="56" rx="10" fill="#CBB7F0"/>
+  <path d="M120 616v-36l12 10 12-12 12 12 12-12 12 12 12-10v36z" fill="#9D84D6" opacity=".4"/>
+  <circle cx="222" cy="588" r="10" fill="#5B3AA8"/>
+  <ellipse cx="171" cy="648" rx="70" ry="10" fill="#C2AEE9" opacity=".5"/>
+</svg>

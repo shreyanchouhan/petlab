@@ -578,27 +578,27 @@ ul,ol{margin:0;padding:0;list-style:none}
 
 /* the four pillars — the brochure's promise panel */
 .pillars__grid{
-  display:grid;grid-template-columns:repeat(2,1fr);
-  max-width:1080px;margin-inline:auto;
-  gap:clamp(18px,2.2vw,30px);
+  display:grid;grid-template-columns:repeat(4,1fr);
+  max-width:1180px;margin-inline:auto;
+  gap:clamp(14px,1.6vw,22px);
 }
 .pillars__card{
   background:#fff;border:1px solid var(--rule);border-radius:18px;
-  padding:clamp(30px,3.4vw,48px) clamp(24px,3vw,40px);
+  padding:clamp(22px,2.4vw,32px) clamp(16px,1.8vw,26px);
   text-align:center;
 }
-.pillars__ico{display:block;color:var(--purple);margin:0 auto 22px}
+.pillars__ico{display:block;color:var(--purple);margin:0 auto 16px}
 .pillars__ico svg{width:clamp(46px,4.4vw,62px);height:auto;margin-inline:auto}
 .pillars__card h3{
-  font-size:clamp(1.1rem,1.5vw,1.32rem);font-weight:600;
+  font-size:clamp(1rem,1.15vw,1.18rem);font-weight:600;
   letter-spacing:.1em;text-transform:uppercase;color:var(--purple);
 }
 .pillars__card h3::after{
   content:"";display:block;width:34px;height:2px;border-radius:2px;
-  background:var(--purple);margin:16px auto 14px;
+  background:var(--purple);margin:12px auto 10px;
 }
 .pillars__card p{
-  font-size:.95rem;line-height:1.7;color:var(--ink-soft);
+  font-size:.92rem;line-height:1.6;color:var(--ink-soft);
   max-width:22em;margin-inline:auto;
 }
 .compare{
@@ -657,7 +657,7 @@ ul,ol{margin:0;padding:0;list-style:none}
 .faq__list p{padding:0 44px 26px 0;font-size:.98rem;line-height:1.75;color:var(--ink-soft);margin:0}
 
 @media (max-width:1080px){
-  .ai__grid,.comes__grid{grid-template-columns:repeat(2,1fr)}
+  .ai__grid,.comes__grid,.pillars__grid{grid-template-columns:repeat(2,1fr)}
 }
 @media (max-width:860px){
   .nav__cta .btn--ghost{display:none}
@@ -1548,8 +1548,10 @@ h2 .it{font-style:italic;font-weight:560}
 /* ═══ DIAGNOSTICS NEAR YOU ═══ */
 .near{background:linear-gradient(180deg,#F7F3FE 0%,#F1EBFC 100%)}
 .near .lead{max-width:48em}
-.near__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(18px,2.4vw,34px);margin-top:clamp(8px,1.4vw,18px)}
-.place{height:100%}
+.near__grid{display:grid;grid-template-columns:repeat(6,1fr);gap:clamp(18px,2.4vw,34px);margin-top:clamp(8px,1.4vw,18px)}
+.place{height:100%;grid-column:span 2}
+/* five cards sit as 3 + 2, second row centred */
+.place:nth-child(4){grid-column:2/span 2}
 .place__card{height:100%;display:flex;flex-direction:column;border-radius:34px 34px 30px 30px}
 .place__media{
   position:relative;overflow:hidden;
@@ -1557,7 +1559,7 @@ h2 .it{font-style:italic;font-weight:560}
   aspect-ratio:5/4;box-shadow:var(--lift-2);
   transform:translateZ(0);
 }
-.place:nth-child(2) .place__media{border-radius:36px 120px 28px 28px / 36px 70px 28px 28px}
+.place:nth-child(2) .place__media,.place:nth-child(4) .place__media{border-radius:36px 120px 28px 28px / 36px 70px 28px 28px}
 .place__media img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
 .place:nth-child(3) .place__media img{object-position:60% 40%}
 .place__card:hover .place__media img{transform:scale(1.045)}
@@ -1606,8 +1608,15 @@ h2 .it{font-style:italic;font-weight:560}
 .near__script{position:absolute;right:clamp(0px,1vw,24px);bottom:clamp(-6px,0vw,10px)}
 
 @media (max-width:1080px){ .near__script{display:none} }
+@media (max-width:1080px){
+  .near__grid{grid-template-columns:repeat(2,1fr)}
+  .place{grid-column:auto}
+  .place:nth-child(4){grid-column:auto}
+  .place:nth-child(5){grid-column:1/-1;max-width:calc(50% - clamp(9px,1.2vw,17px));margin-inline:auto;width:100%}
+}
 @media (max-width:860px){
   .near__grid{grid-template-columns:1fr;max-width:520px;margin-inline:auto}
+  .place:nth-child(5){max-width:none;margin-inline:0}
   .near__route{display:none}
 }
 
@@ -1785,7 +1794,7 @@ h2 .it{font-style:italic;font-weight:560}
   transition:transform .5s var(--ease),box-shadow .5s var(--ease);
 }
 .pillars__card:hover{transform:translateY(-4px);box-shadow:var(--rim),var(--lift-2)}
-.pillars__ico.orb{display:flex;width:84px;height:84px;margin:0 auto 20px}
+.pillars__ico.orb{display:flex;width:64px;height:64px;margin:0 auto 14px}
 .pillars__ico.orb svg{width:44%;height:44%}
 .tabs__pane{box-shadow:var(--lift-1)}
 .faq__list details{transition:background .3s var(--ease)}

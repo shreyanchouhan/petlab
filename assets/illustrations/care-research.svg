@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 800" role="img" aria-label="A research institute bench: a researcher at a microscope beside flasks, a sample-tube rack, a laptop with charts and the VETCARE analyser.">
+  <defs>
+    <linearGradient id="rw" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F3EDFD"/><stop offset="1" stop-color="#EAE0FA"/>
+    </linearGradient>
+    <linearGradient id="rb" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6A4AB0"/><stop offset="1" stop-color="#5B3AA8"/>
+    </linearGradient>
+  </defs>
+  <!-- wall and floor -->
+  <rect width="1000" height="800" fill="url(#rw)"/>
+  <rect y="640" width="1000" height="160" fill="#D6C6F2"/>
+  <rect y="636" width="1000" height="8" fill="#C7B4EC"/>
+  <!-- shelf with glassware and books -->
+  <rect x="80" y="150" width="340" height="14" rx="7" fill="#B9A2E6"/>
+  <rect x="100" y="86" width="16" height="64" rx="4" fill="#7C5CC4"/>
+  <rect x="122" y="78" width="16" height="72" rx="4" fill="#9D84D6"/>
+  <rect x="144" y="92" width="16" height="58" rx="4" fill="#B06AB8"/>
+  <path d="M210 92h24v24l18 30c4 8-2 14-10 14h-40c-8 0-14-6-10-14l18-30z" fill="#EFE8FC" stroke="#9D84D6" stroke-width="5"/>
+  <path d="M206 134h32l8 14c2 6-2 8-6 8h-36c-4 0-8-2-6-8z" fill="#B06AB8"/>
+  <rect x="276" y="92" width="14" height="58" rx="7" fill="#EFE8FC" stroke="#9D84D6" stroke-width="5"/>
+  <rect x="318" y="104" width="52" height="46" rx="10" fill="#EFE8FC" stroke="#9D84D6" stroke-width="5"/>
+  <rect x="318" y="128" width="52" height="22" rx="8" fill="#9FE8C4"/>
+  <!-- pinned research charts -->
+  <rect x="560" y="80" width="190" height="150" rx="14" fill="#FFFFFF"/>
+  <polyline points="582,196 616,160 644,176 676,120 724,138" fill="none" stroke="#7C5CC4" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="676" cy="120" r="7" fill="#B06AB8"/>
+  <rect x="582" y="98" width="70" height="10" rx="5" fill="#E3D7F8"/>
+  <rect x="784" y="110" width="150" height="120" rx="14" fill="#FFFFFF"/>
+  <rect x="804" y="186" width="20" height="26" rx="5" fill="#B9A2E6"/>
+  <rect x="832" y="166" width="20" height="46" rx="5" fill="#9D84D6"/>
+  <rect x="860" y="146" width="20" height="66" rx="5" fill="#7C5CC4"/>
+  <rect x="888" y="156" width="20" height="56" rx="5" fill="#B06AB8"/>
+  <circle cx="814" cy="132" r="8" fill="#9D84D6"/>
+  <circle cx="798" cy="124" r="5.6" fill="#9D84D6"/>
+  <circle cx="830" cy="124" r="5.6" fill="#9D84D6"/>
+  <!-- bench -->
+  <rect x="48" y="430" width="904" height="30" rx="15" fill="url(#rb)"/>
+  <rect x="88" y="460" width="18" height="180" rx="8" fill="#7C5CC4"/>
+  <rect x="894" y="460" width="18" height="180" rx="8" fill="#7C5CC4"/>
+  <rect x="300" y="460" width="400" height="150" rx="16" fill="#E3D7F8"/>
+  <rect x="330" y="488" width="150" height="14" rx="7" fill="#C7B4EC"/>
+  <rect x="330" y="520" width="150" height="14" rx="7" fill="#C7B4EC"/>
+  <rect x="520" y="488" width="150" height="46" rx="10" fill="#C7B4EC"/>
+  <!-- microscope -->
+  <rect x="120" y="406" width="150" height="24" rx="12" fill="#3B2178"/>
+  <path d="M168 406c-8-52 10-88 44-104l16 24c-26 12-38 40-32 80z" fill="#5B3AA8"/>
+  <rect x="200" y="280" width="28" height="56" rx="12" transform="rotate(24 214 308)" fill="#3B2178"/>
+  <circle cx="236" cy="268" r="14" fill="#7C5CC4"/>
+  <rect x="150" y="380" width="56" height="12" rx="6" fill="#7C5CC4"/>
+  <rect x="166" y="356" width="24" height="26" rx="6" fill="#9FE8C4"/>
+  <!-- researcher -->
+  <circle cx="420" cy="252" r="36" fill="#8C5A3C"/>
+  <path d="M388 240c0-22 16-36 32-36 18 0 32 16 32 38-6-14-18-20-32-20s-26 6-32 18z" fill="#241736"/>
+  <circle cx="452" cy="212" r="16" fill="#241736"/>
+  <path d="M398 258h22M434 258h22" stroke="#3B2178" stroke-width="5" stroke-linecap="round"/>
+  <path d="M420 258v6" stroke="#3B2178" stroke-width="4" stroke-linecap="round"/>
+  <path d="M362 430c0-74 26-122 58-122s58 48 58 122z" fill="#FFFFFF"/>
+  <path d="M404 312h32v52h-32z" fill="#B06AB8"/>
+  <path d="M372 330c-22 20-30 52-22 62l48 14 8-22-38-12c6-12 8-28 4-42z" fill="#FFFFFF"/>
+  <path d="M468 330c20 18 28 44 22 56l-60 10-4-22 46-8c-4-12-6-24-4-36z" fill="#FFFFFF"/>
+  <circle cx="398" cy="414" r="12" fill="#8C5A3C"/>
+  <circle cx="434" cy="406" r="12" fill="#8C5A3C"/>
+  <!-- pipette in hand -->
+  <path d="M434 406l36-28" stroke="#3B2178" stroke-width="6" stroke-linecap="round"/>
+  <path d="M470 378l10-8" stroke="#B06AB8" stroke-width="8" stroke-linecap="round"/>
+  <!-- tube rack on bench -->
+  <rect x="508" y="398" width="110" height="34" rx="8" fill="#FFFFFF"/>
+  <rect x="520" y="376" width="12" height="38" rx="6" fill="#B06AB8"/>
+  <rect x="542" y="376" width="12" height="38" rx="6" fill="#7C5CC4"/>
+  <rect x="564" y="376" width="12" height="38" rx="6" fill="#9FE8C4"/>
+  <rect x="586" y="376" width="12" height="38" rx="6" fill="#B06AB8"/>
+  <!-- laptop with scatter chart -->
+  <path d="M652 344h148v80H652z" fill="#3B2178"/>
+  <rect x="660" y="352" width="132" height="64" rx="6" fill="#EFE8FC"/>
+  <circle cx="684" cy="396" r="5" fill="#7C5CC4"/><circle cx="706" cy="384" r="5" fill="#7C5CC4"/>
+  <circle cx="726" cy="390" r="5" fill="#B06AB8"/><circle cx="748" cy="372" r="5" fill="#7C5CC4"/>
+  <circle cx="768" cy="366" r="5" fill="#B06AB8"/>
+  <path d="M672 404 780 360" stroke="#9D84D6" stroke-width="4" stroke-linecap="round"/>
+  <path d="M636 424h180l10 14H626z" fill="#5B3AA8"/>
+  <!-- VETCARE analyser -->
+  <rect x="836" y="320" width="120" height="110" rx="18" fill="#FFFFFF"/>
+  <rect x="848" y="336" width="66" height="50" rx="8" fill="#5B3AA8"/>
+  <polyline points="856,370 868,370 876,350 886,378 894,362 906,362" fill="none" stroke="#9FE8C4" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="934" cy="346" r="8" fill="#B9A2E6"/>
+  <rect x="924" y="366" width="22" height="8" rx="4" fill="#E3D7F8"/>
+  <rect x="924" y="380" width="22" height="8" rx="4" fill="#E3D7F8"/>
+  <!-- floor shadows -->
+  <ellipse cx="500" cy="668" rx="300" ry="20" fill="#C2AEE9" opacity=".55"/>
+  <!-- stool -->
+  <rect x="384" y="560" width="76" height="16" rx="8" fill="#8F77C9"/>
+  <rect x="414" y="576" width="12" height="70" rx="6" fill="#8F77C9"/>
+  <ellipse cx="420" cy="652" rx="48" ry="9" fill="#C2AEE9" opacity=".5"/>
+</svg>
