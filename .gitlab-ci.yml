@@ -1,0 +1,321 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Petlab marketing site → S3 + CloudFront.
+#
+# A merge request into staging gets checked and reviewed. A merge into main
+# goes live. Plain static HTML/CSS/JS: no build step, no dependencies.
+#
+# The bucket is private. CloudFront reads it through an Origin Access Control,
+# so nothing here makes objects public — and must not try to.
+#
+# AUTH — no long-lived AWS keys anywhere. GitLab mints a short-lived OIDC token
+# per job; AWS trusts this instance as an identity provider and exchanges it for
+# credentials valid for one hour, scoped by the role's trust policy to this
+# project on main.
+#
+# Project CI/CD variables, all Protected:
+#     AWS_ROLE_ARN                 arn:aws:iam::136518012057:role/petlab-web-gitlab-deploy-prod
+#     AWS_DEFAULT_REGION           ap-south-1
+#     S3_BUCKET                    petlab-web-prod
+#     CLOUDFRONT_DISTRIBUTION_ID   E2OILY9LW4ZNKF
+# The AI review platform reads only group variables (ANTHROPIC_API_KEY,
+# AI_REVIEW_GITLAB_TOKEN, AI_REVIEW_MODEL_*, AI_REVIEW_FAIL_ON and the rest);
+# a repository under review cannot supply one, so nothing is set here.
+# Capabilities are switched with AI_REVIEW_CODE_REVIEW, AI_REVIEW_SECURITY_REVIEW
+# and AI_REVIEW_RELEASE_NOTES — set one to "false" and its job never appears.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# The AI review jobs come from the shared platform repo; keys are group variables.
+include:
+  - project: engineering-team/pilot/ai-review-platform
+    ref: main
+    file: /templates/ai-review.yml
+
+workflow:
+  # A new push to a merge request cancels the run it replaced, instead of
+  # queueing behind it. On a single-slot runner this is the biggest time saver.
+  auto_cancel:
+    on_new_commit: interruptible
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
+    # A release tag redeploys itself. This is the rollback path.
+    - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/'
+    - when: never
+
+default:
+  # Nothing is installed at runtime, so the package mirror never has to answer.
+  image: alpine:3.20
+  tags:
+    - petlab-web
+
+variables:
+  # Explicit allowlist, not "copy everything then delete". A new file has to be
+  # added here on purpose, so nothing sensitive ever ships by accident.
+  PUBLISH_FILES: "index.html duo.html styles.css app.js robots.txt sitemap.xml"
+  PUBLISH_DIRS: "assets"
+  # Files that must never reach the web root even if someone adds them above.
+  # apps-script.gs is not named: the file is deleted and the spreadsheet path is
+  # not coming back, so there is nothing left to guard. The two notes are, since
+  # they do still exist here, and an older DEPLOY.md sat in the bucket serving
+  # the lead Sheet ID at petlab.in/DEPLOY.md for two days. Neither is in
+  # PUBLISH_FILES, so naming them costs nothing and closes that door for good.
+  FORBIDDEN_FILES: "DEPLOY.md README.md"
+  SITE_URL: "https://petlab.in"
+  # Must match the audience configured on the IAM identity provider.
+  OIDC_AUDIENCE: "https://gitlab.mobilab.ai"
+  # Pack and unpack with the fast algorithm. The archives are local, so a
+  # smaller file is not worth the wait on a slow runner.
+  FF_USE_FASTZIP: "true"
+  CACHE_COMPRESSION_LEVEL: "fastest"
+  ARTIFACT_COMPRESSION_LEVEL: "fastest"
+
+# Each stage must pass before the next one starts. A change that would publish
+# a forbidden file, or that leaks a credential, never reaches a model.
+stages:
+  - quality
+  - security
+  - ai-review
+  - package
+  - deploy
+  - post-deploy
+
+# ─── Shared script blocks ────────────────────────────────────────────────────
+
+.assemble_site: &assemble_site
+  - rm -rf public && mkdir -p public
+  - cp ${PUBLISH_FILES} public/
+  - |
+    for dir in ${PUBLISH_DIRS}; do
+      [ -d "$dir" ] && cp -r "$dir" "public/$dir"
+    done
+  - |
+    for forbidden in ${FORBIDDEN_FILES}; do
+      if [ -e "public/$forbidden" ]; then
+        echo "FATAL: $forbidden would be published. Refusing to continue." >&2
+        exit 1
+      fi
+    done
+  - echo "── to publish ──" && find public -maxdepth 1 -mindepth 1 | sort
+
+# The OIDC token is the proof of identity, so this exchange needs no
+# credentials of its own. Printing the assumed identity first turns a wrong
+# trust policy into a readable failure here rather than a confusing one later.
+.assume_aws_role: &assume_aws_role
+  - |
+    CREDENTIALS=$(aws sts assume-role-with-web-identity \
+      --role-arn "${AWS_ROLE_ARN}" \
+      --role-session-name "${CI_PROJECT_NAME}-${CI_PIPELINE_ID}" \
+      --web-identity-token "${GITLAB_OIDC_TOKEN}" \
+      --duration-seconds 3600 \
+      --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' \
+      --output text)
+    export AWS_ACCESS_KEY_ID=$(echo "$CREDENTIALS" | cut -f1)
+    export AWS_SECRET_ACCESS_KEY=$(echo "$CREDENTIALS" | cut -f2)
+    export AWS_SESSION_TOKEN=$(echo "$CREDENTIALS" | cut -f3)
+  - aws sts get-caller-identity
+
+# ─── Shared job scaffolding ──────────────────────────────────────────────────
+
+# Checks change nothing, so a newer push may cancel them safely.
+#
+# Merge requests only. `workflow:` builds no pipeline for a push to staging, so
+# a branch rule for it here could never match — the request into staging is
+# where these run. Not on main either: everything reaching main has already been
+# checked on the request that put it there, so a main pipeline only packages,
+# deploys and records the release.
+.checks:
+  interruptible: true
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+
+.aws:
+  image:
+    name: amazon/aws-cli:latest
+    entrypoint: [""]
+  id_tokens:
+    GITLAB_OIDC_TOKEN:
+      aud: ${OIDC_AUDIENCE}
+  cache: []
+
+# ─── quality ─────────────────────────────────────────────────────────────────
+
+# The allowlist is the gate that matters in this repo. Everything else is
+# advisory; this is the one that stops a secret shipping.
+bundle:
+  extends: .checks
+  stage: quality
+  script:
+    - *assemble_site
+
+# Every asset the pages ask for must exist on disk. Assets live in assets/ under
+# a folder per kind (brand, partners, device, software, photos, video), so a path
+# is easy to get subtly wrong in a way nothing else here would catch: a missing
+# image is invisible in CI, silent in the browser console for the deployer, and
+# only shows up as a hole on the live page.
+assets:
+  extends: .checks
+  stage: quality
+  script:
+    - |
+      missing=0
+      for path in $(grep -oh "assets/[A-Za-z0-9_./-]*" index.html duo.html | sort -u); do
+        if [ ! -f "$path" ]; then echo "MISSING: $path" >&2; missing=1; fi
+      done
+      [ "$missing" = 0 ] || { echo "FATAL: a page references an asset that is not in the repo." >&2; exit 1; }
+      echo "── all referenced assets present ──"
+      grep -oh "assets/[A-Za-z0-9_./-]*" index.html duo.html | sort -u | wc -l
+
+# ─── security ────────────────────────────────────────────────────────────────
+
+# Scans the files as they are, not the history, so it clones one commit. There
+# are no allowlisted files any more: the demo form holds no endpoint and no Sheet
+# ID, so the google-sheet-id rule now applies everywhere without exception.
+secret-scan:
+  extends: .checks
+  stage: security
+  variables:
+    GIT_DEPTH: "1"
+  image:
+    name: zricethezav/gitleaks:latest
+    entrypoint: [""]
+  cache: []
+  script:
+    - gitleaks detect --no-git --source . --config .gitleaks.toml --redact --exit-code 1
+
+# ─── ai-review ───────────────────────────────────────────────────────────────
+
+# Defined in the platform repo; here we only place them in our own stages.
+# Never add `extends` to these — it replaces the template's own and strips the
+# AI image, leaving the job on the default image where ai-review-* does not
+# exist. The stage is the gate: they wait for quality and security, so a change
+# that would leak a secret is never reviewed and costs no model call.
+ai:analyse:
+  stage: ai-review
+ai:code_review:
+  stage: ai-review
+ai:security_review:
+  stage: ai-review
+ai:publish:
+  stage: ai-review
+# After the deploy, so it can never block a release and the notes describe what
+# actually went live.
+ai:release_notes:
+  stage: post-deploy
+
+# ─── package ─────────────────────────────────────────────────────────────────
+
+# Assembles the tree once and settles the version, so deploy and release both
+# work from the same numbers rather than recomputing them.
+assemble:
+  stage: package
+  # Git tags are the version counter, so this job needs git and no AWS at all.
+  # alpine/git carries git plus the busybox tools assemble_site uses.
+  image:
+    name: alpine/git:latest
+    entrypoint: [""]
+  cache: []
+  variables:
+    # Tags are the release history and a shallow clone cannot see them.
+    GIT_DEPTH: "0"
+  script:
+    - *assemble_site
+    # A tag pipeline is a rollback: it redeploys what that tag already carries,
+    # so it reuses that version instead of earning a new one.
+    - |
+      if [ -n "${CI_COMMIT_TAG:-}" ]; then
+        APP_VERSION="${CI_COMMIT_TAG#v}"
+        echo "rollback: redeploying $CI_COMMIT_TAG"
+      else
+        APP_VERSION=$(sh deploy/next-version.sh)
+      fi
+      echo "APP_VERSION=$APP_VERSION" > build.env
+      echo "packaging version $APP_VERSION from $CI_COMMIT_SHORT_SHA"
+  artifacts:
+    paths:
+      - public/
+    reports:
+      dotenv: build.env
+    expire_in: 7 days
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/'
+
+# ─── deploy ──────────────────────────────────────────────────────────────────
+
+deploy:
+  extends: .aws
+  stage: deploy
+  needs:
+    - job: assemble
+      artifacts: true
+  environment:
+    name: production
+    url: ${SITE_URL}
+  before_script:
+    - *assume_aws_role
+  script:
+    # Assets carry stable filenames and change rarely, so they cache for a
+    # month. Every deploy invalidates, so a stale asset cannot outlive a release.
+    - aws s3 sync public/${PUBLISH_DIRS} "s3://${S3_BUCKET}/${PUBLISH_DIRS}" --delete
+      --cache-control "public, max-age=2592000"
+    # HTML, CSS and JS have unhashed names, so they must revalidate every time
+    # or a visitor keeps yesterday's markup against today's stylesheet.
+    #
+    # Only the assets tree is held back from --delete. *.md used to be too, to
+    # leave notes already in the bucket alone, and that is how an old DEPLOY.md
+    # went on serving the lead Sheet ID at petlab.in/DEPLOY.md after the file
+    # itself had been cleaned: never republished, so never corrected, and never
+    # deleted either. The web root holds what public/ holds, nothing older.
+    # assets/CREDITS.md still ships; the sync above it carries the assets tree.
+    - aws s3 sync public/ "s3://${S3_BUCKET}/" --delete --exclude "${PUBLISH_DIRS}/*"
+      --cache-control "no-cache, must-revalidate"
+    # Nothing is archived here. The release history lives in GitLab, and the tag
+    # holds the files, so the bucket only ever carries the live site.
+    # CloudFront holds the old copies until told otherwise.
+    - aws cloudfront create-invalidation
+      --distribution-id "${CLOUDFRONT_DISTRIBUTION_ID}" --paths "/*"
+    - echo "Deployed v${APP_VERSION} to ${SITE_URL}"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/'
+
+# ─── rollback ────────────────────────────────────────────────────────────────
+#
+# There is no rollback job and no archive in the bucket. The release history
+# lives in GitLab: every deploy is tagged vX.Y.Z by the release job below, and
+# the tag already holds the exact files that went live.
+#
+# To roll back, run a pipeline on the tag:
+#   Build > Pipelines > Run pipeline > select the tag, e.g. v1.0.7
+# assemble rebuilds that tag's files, deploy syncs them and invalidates
+# CloudFront. A tag pipeline reuses its own version, so no number is consumed.
+#
+# Deploy > Releases lists what exists, which is what list-releases used to print.
+
+# ─── post-deploy ─────────────────────────────────────────────────────────────
+
+# Records the version in Deploy > Releases, only after the deploy succeeded.
+release:
+  stage: post-deploy
+  needs:
+    - job: assemble
+      artifacts: true
+    - job: deploy
+      artifacts: false
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  cache: []
+  script:
+    - echo "releasing v$APP_VERSION from $CI_COMMIT_SHA"
+  release:
+    tag_name: "v$APP_VERSION"
+    ref: "$CI_COMMIT_SHA"
+    name: "v$APP_VERSION"
+    # No backticks. release-cli passes this through a shell, which reads them as
+    # command substitution and runs the contents.
+    description: |
+      Deployed to $SITE_URL from $CI_COMMIT_BRANCH at $CI_COMMIT_SHORT_SHA.
+
+      Rollback: run a pipeline on tag v$APP_VERSION
+      (Build > Pipelines > Run pipeline > select v$APP_VERSION).
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'

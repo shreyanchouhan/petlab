@@ -1,0 +1,41 @@
+#!/bin/sh
+# ---------------------------------------------------------------------------
+# Refuses any commit that modifies a protected file.
+#
+# These files are the repository's guard rails: the ignore list, the CI/CD
+# pipeline, the AI review policy and the secret-scan rules. A change to any of
+# them changes what may be published or what gets checked, so it must be
+# deliberate — never a side effect of a tool or an automated edit.
+#
+# To change one on purpose:
+#     ALLOW_PROTECTED_EDIT=1 git commit ...
+#
+# This is a guard against accidents, not a security control: a local hook can
+# always be bypassed. Real enforcement is a GitLab protected branch + push rules.
+# ---------------------------------------------------------------------------
+set -e
+
+PROTECTED=".gitignore .gitlab-ci.yml .ai-review.yml .gitleaks.toml .githooks/pre-commit"
+
+[ -n "${ALLOW_PROTECTED_EDIT:-}" ] && exit 0
+
+staged=$(git diff --cached --name-only)
+blocked=""
+for f in $PROTECTED; do
+  for s in $staged; do
+    [ "$s" = "$f" ] && blocked="$blocked $f"
+  done
+done
+
+if [ -n "$blocked" ]; then
+  echo "" >&2
+  echo "BLOCKED: this commit modifies protected file(s):" >&2
+  for b in $blocked; do echo "    $b" >&2; done
+  echo "" >&2
+  echo "These control what gets published and what gets scanned." >&2
+  echo "If the change is intended, repeat with:" >&2
+  echo "    ALLOW_PROTECTED_EDIT=1 git commit ..." >&2
+  echo "" >&2
+  exit 1
+fi
+exit 0

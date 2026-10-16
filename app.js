@@ -1,4 +1,4 @@
-/* PETLAB · vet-web-5.0 */
+/* VETCARE · vet-web-5.0 */
 
 // ── sticky nav ──
 const nav = document.getElementById('nav');
@@ -126,7 +126,7 @@ if (form) {
     // user gesture, and awaiting anything first spends it — which is how the old
     // endpoint path used to get its WhatsApp tab swallowed by the popup blocker.
     const lines = [
-      '*New demo request: PETLAB website*', '',
+      '*New demo request: VETCARE website*', '',
       'Name: ' + data.name,
       'Clinic: ' + (data.clinic || '-'),
       'Email: ' + data.email,
@@ -137,7 +137,7 @@ if (form) {
 
     const wa = 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(lines);
     const mail = 'mailto:' + NOTIFY_EMAIL
-      + '?subject=' + encodeURIComponent('PETLAB demo request: ' + data.name)
+      + '?subject=' + encodeURIComponent('VETCARE demo request: ' + data.name)
       + '&body=' + encodeURIComponent(lines.replace(/\*/g, ''));
 
     window.open(wa, '_blank', 'noopener');
@@ -237,8 +237,8 @@ document.querySelectorAll('[data-film]').forEach(fig => {
   let greeted = false;
 
   const CANNED = [
-    [/fast|quick|time|30|minute|report/i, 'A PETLAB report is ready in about 30 minutes, sample to structured, AI-analysed result, inside a single consultation rather than the 24–48 hours a central lab takes.'],
-    [/test|parameter|panel|menu|profile/i, 'Eleven parameters across five clinical profiles: Liver (AST, ALT, Total Protein, Albumin, Total Bilirubin), Kidney (Urea, Creatinine), Diabetic (Glucose), Lipid (Cholesterol, Triglyceride) and Haematology (Haemoglobin).'],
+    [/fast|quick|time|30|minute|report/i, 'A VETCARE report is ready in about 30 minutes, sample to structured, AI-analysed result, inside a single consultation rather than the 24–48 hours a central lab takes.'],
+    [/test|parameter|panel|menu|profile/i, 'Seventeen parameters across five clinical profiles: Liver (AST, ALT, Total Protein, Albumin, Globulin, Total Bilirubin, A/G Ratio, AST/ALT Ratio), Kidney (Urea, Creatinine, BUN, BUN/Creatinine Ratio, Urea/Creatinine Ratio), Diabetic (Glucose), Lipid (Cholesterol, Triglyceride) and Haematology (Haemoglobin).'],
     [/where|use|clinic|home|camp|field|portable/i, 'Anywhere care happens. The unit is battery operated and packed in one rugged case, so it runs at the clinic, on a home visit, or at a mobile camp, no fixed laboratory needed.'],
     [/approv|licen|certif|cdsco|iso|regulat/i, 'The platform is CDSCO licensed (MFG/IVD/2025/000042), ISO 13485 & 9001 certified and IEC ESD compliant, and has been validated by AIIMS Delhi, the Indian Army, IIT Guwahati and hospitals in Guwahati.'],
     [/ai|intelligen|species|flag/i, 'The AI runs on the device: it applies species-specific reference ranges automatically, flags every parameter high or low, and catches anomalous readings before they mislead a diagnosis.'],
@@ -272,7 +272,7 @@ document.querySelectorAll('[data-film]').forEach(fig => {
     launcher.setAttribute('aria-expanded', 'true');
     if (!greeted) {
       greeted = true;
-      bubble('Hello, I can answer quick questions about PETLAB: turnaround time, the test menu, where it can be used and how it is licensed. For anything else, we will put you straight through to the team.', 'bot');
+      bubble('Hello, I can answer quick questions about VETCARE: turnaround time, the test menu, where it can be used and how it is licensed. For anything else, we will put you straight through to the team.', 'bot');
     }
     input.focus();
   }
@@ -341,3 +341,59 @@ document.addEventListener('keydown', e => {
     t.focus();
   }
 });
+
+// ── 7.0 depth: cards lean toward the pointer, and the hero photograph drifts a
+//    few pixels against it so the clinic reads as a room rather than a flat
+//    picture. Fine pointers only, and nothing moves for reduced motion.
+(function () {
+  const fine = matchMedia('(hover:hover) and (pointer:fine)').matches;
+  const calm = matchMedia('(prefers-reduced-motion:reduce)').matches;
+  if (!fine || calm) return;
+
+  document.querySelectorAll('[data-tilt]').forEach(el => {
+    const max = parseFloat(el.dataset.tilt) || 6;
+    let frame = 0;
+    el.addEventListener('pointermove', e => {
+      const r = el.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        el.classList.add('is-tilting');
+        el.style.setProperty('--ry', (x * max).toFixed(2) + 'deg');
+        el.style.setProperty('--rx', (-y * max).toFixed(2) + 'deg');
+      });
+    });
+    el.addEventListener('pointerleave', () => {
+      cancelAnimationFrame(frame);
+      el.classList.remove('is-tilting');
+      el.style.setProperty('--rx', '0deg');
+      el.style.setProperty('--ry', '0deg');
+    });
+  });
+
+  const hero = document.getElementById('hero');
+  const depth = document.getElementById('heroDepth');
+  if (hero && depth && matchMedia('(min-width:861px)').matches) {
+    const layers = [...depth.querySelectorAll('[data-depth]')];
+    let frame = 0;
+    hero.addEventListener('pointermove', e => {
+      const r = hero.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        for (const l of layers) {
+          const d = parseFloat(l.dataset.depth);
+          // the photo sinks away from the pointer, the result card rises toward it
+          const k = d > 1 ? 10 : -14;
+          l.style.transform = `translate3d(${(x * k).toFixed(1)}px, ${(y * k * 0.7).toFixed(1)}px, 0)`;
+        }
+      });
+    });
+    hero.addEventListener('pointerleave', () => {
+      cancelAnimationFrame(frame);
+      for (const l of layers) l.style.transform = '';
+    });
+  }
+})();

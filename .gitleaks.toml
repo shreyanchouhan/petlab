@@ -1,0 +1,16 @@
+title = "petlab-web"
+
+[extend]
+useDefault = true
+
+# The Sheet ID is the secret here: it names the enquiry sheet directly, so it
+# must never reach a file that ships to the web root.
+[[rules]]
+id = "google-sheet-id"
+description = "Google Sheets file ID"
+regex = '''\b1[A-Za-z0-9_-]{43}\b'''
+tags = ["google", "sheets"]
+
+# No allowlist. The demo form is a WhatsApp hand-off with no endpoint and no
+# spreadsheet behind it, so nothing in this repo has a legitimate reason to carry
+# a Sheet ID — the rule above applies everywhere, with no exceptions to maintain.

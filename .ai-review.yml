@@ -1,0 +1,65 @@
+# ---------------------------------------------------------------------------
+# AI review settings for petlab-web. The platform lives in
+# engineering-team/pilot/ai-review-platform; this file only tunes it.
+# ---------------------------------------------------------------------------
+
+repository:
+  name: petlab-web
+
+deployment: s3-cloudfront
+
+# No `ai:` block on purpose. Capabilities are switched with the platform's
+# CI/CD variables — AI_REVIEW_CODE_REVIEW, AI_REVIEW_SECURITY_REVIEW,
+# AI_REVIEW_RELEASE_NOTES — so turning one off drops the job from the pipeline
+# entirely rather than starting it to exit early, and does not need a commit.
+
+# Blocking from day one: the failure this repo has already had — publishing a
+# file that named the lead Sheet ID — is exactly a critical finding.
+policy:
+  fail_on:
+    - critical
+    - high
+
+# DEPLOY.md carries the rules a reviewer needs: what may be published, which
+# host the metadata must name, and how the lead form degrades.
+context:
+  paths:
+    - "DEPLOY.md"
+    - "README.md"
+  max_sections: 4
+
+instructions:
+  code_review: |
+    The site is static, so there is no server-side attack surface. The only
+    dynamic behavior is the demo form, which hands the enquiry to WhatsApp and
+    falls back to mailto. There is no backend, so there is no database or
+    third-party service that could be compromised.
+
+    Still in scope: any change that breaks the hand-off to WhatsApp or the
+    fallback mailto, which loses leads silently. That hand-off is window.open
+    on a wa.me link, and it must run synchronously in the submit handler —
+    awaiting anything first spends the user gesture that lets window.open past
+    the popup blocker. Its fallback is the status message: a direct wa.me link
+    and a mailto beside it, for a blocked popup or a visitor without WhatsApp.
+    Losing those is high.
+
+  security_review: |
+    The site is static, so there is no server-side attack surface. The only
+    dynamic behavior is the demo form, which hands the enquiry to WhatsApp and
+    falls back to mailto. There is no backend, so there is no database or
+    third-party service that could be compromised.
+
+    Still in scope: any change that breaks the hand-off to WhatsApp or the
+    fallback mailto, which loses leads silently. That hand-off is window.open
+    on a wa.me link, and it must run synchronously in the submit handler —
+    awaiting anything first spends the user gesture that lets window.open past
+    the popup blocker. Its fallback is the status message: a direct wa.me link
+    and a mailto beside it, for a blocked popup or a visitor without WhatsApp.
+    Losing those is high.
+
+  release_notes: |
+    Write for whoever needs to know what visitors will see. Separate content and
+    copy changes from pipeline, infrastructure or metadata changes.
+
+    Always call out a change to the demo form or to anything affecting how a
+    lead reaches the sales phone.
