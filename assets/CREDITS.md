@@ -11,7 +11,7 @@
 | `device/petlab-ecosystem.jpg`, `device/petlab-ecosystem.webp` | Render supplied by Petlab (`ChatGPT Image Sep 9, 2026, 01_32_29 PM.png`), 1774x887, resized to 1600x800. Centre of the Difference section on index.html, replacing `difference-scene.jpg` and `kit-trio.jpg` (both now unreferenced). |
 | `device/duo-hero-scene.jpg`, `device/duo-hero-scene.webp` | Render supplied by Petlab via Google Drive (`ChatGPT Image Sep 15, 2026, 12_19_18 PM.png`), 1672x941. Background of the hero on duo.html. |
 | `illustrations/*.jpg`, `illustrations/*.webp` (steps-, menu-, software-, platform-) | Cropped from the Petlab redesign mockups (`ChatGPT Image Sep 15, 2026, 12_23_55 PM.png`, `12_30_04 PM.png`, `12_44_53 PM.png`, `12_53_27 PM.png`). Steps, test menu, software and platform sections on duo.html; test menu on index.html. |
-| `video/petlab-demo.mp4`, `video/poster-demo.jpg` | `Petlab Demo Video (1).mp4`, supplied by Petlab. Re-encoded for the web (H.264, 1080p, faststart); poster is a frame from the film. Plays muted in the Product section on both pages. |
+| `video/petlab-demo.mp4`, `video/poster-demo.jpg` | `Vetcare Demo Video_updated (1).mp4`, supplied by Petlab. Re-encoded for the web (H.264, 1080p, faststart); poster is a frame from the film. Plays muted in the Product section on both pages. |
 
 ## Photography (Pexels licence — free for commercial use)
 | File | Source | Photographer |
