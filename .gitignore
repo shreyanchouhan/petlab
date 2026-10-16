@@ -16,3 +16,14 @@ node_modules/
 # never commit a live endpoint or key by accident
 .env
 .env.*
+
+# GitLab Pages build output
+public/
+
+# ── YAML: deny by default ────────────────────────────────────────────────────
+# The two ! lines keep the live CI config tracked. Remove them and GitLab
+# finds no .gitlab-ci.yml, which deletes the pipeline.
+*.yml
+*.yaml
+!.gitlab-ci.yml
+!.ai-review.yml
