@@ -20,6 +20,8 @@
 
   --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
   --font-display:'Fraunces',Georgia,'Times New Roman',serif;
+  /* the logo's geometric rounded sans, for the wordmark set in running text */
+  --font-brand:'Quicksand','Inter',-apple-system,BlinkMacSystemFont,sans-serif;
 
   --h1:clamp(2.7rem,6.8vw,5.6rem);
   --h2:clamp(2rem,4.2vw,3.4rem);
@@ -2393,11 +2395,32 @@ section.pf h3.pf__ptitle{margin:0;font-family:var(--x-serif);font-weight:560;fon
 }
 @media (prefers-reduced-motion:reduce){ .tm__bar button,.tm__pane{transition:none;animation:none} }
 
-/* ── PETLAB inside a display heading: the wordmark's bold, upright capitals ── */
+/* ── VETCARE is always set in the logo's own typeface, lowercase like the
+      mark itself — in headings, in buttons and in running copy ── */
+.x-brandword{
+  font-family:var(--font-brand);
+  font-style:normal;font-weight:500;font-variation-settings:normal;font-size:1.02em;
+  text-transform:lowercase;letter-spacing:0;
+}
+strong .x-brandword,b .x-brandword,summary .x-brandword,
+h3 .x-brandword,h4 .x-brandword{font-weight:600}
+/* inside tracked-out uppercase labels the lowercase mark needs a size nudge
+   so its x-height sits level with the caps around it */
+.tag .x-brandword,.eyebrow .x-brandword,.label .x-brandword,
+.x-mono .x-brandword,.crumb .x-brandword,.dh__pill .x-brandword,
+th .x-brandword,.cmp__kicker .x-brandword,.ribbon .x-brandword,
+.footer__nav h4 .x-brandword{font-weight:600;font-size:1.16em}
+/* buttons keep their own uppercase lockup — the mark set inside a tracked-out
+   call to action read as a different label pasted into the middle of it */
+.btn .x-brandword{
+  font-family:inherit;font-weight:inherit;font-size:inherit;
+  text-transform:inherit;letter-spacing:inherit;
+}
+h1 .x-brandword,h2 .x-brandword{font-weight:700;font-size:1.04em}
 h2 em.x-brandword,h1 em.x-brandword{
-  font-family:var(--f-sans,var(--font,'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif));
-  font-style:normal;font-weight:800;font-variation-settings:normal;font-size:.9em;
-  text-transform:uppercase;letter-spacing:-.005em;color:#5A26D6;
+  font-family:var(--font-brand);
+  font-style:normal;font-weight:700;font-variation-settings:normal;font-size:1.04em;
+  text-transform:lowercase;letter-spacing:0;color:#5A26D6;
 }
 
 /* ── fixes after the first render ── */
@@ -2728,3 +2751,22 @@ section.section h2.x-title em.x-brandword--ink{color:inherit}
 .quote figcaption{font-size:.88rem;color:var(--ink-soft)}
 .quote figcaption b{display:block;color:var(--ink);font-weight:500}
 @media (max-width:860px){.quotes__grid{grid-template-columns:1fr}}
+
+/* ── "pet care" rolls over to "vet care" on a 3s cadence: the headline
+     says out loud that the same box serves both sides of the exam table.
+     The violet accent moves off "transform" and onto the rolling word. ── */
+.rw{
+  display:inline-block;overflow:hidden;
+  line-height:1.5;height:1.5em;vertical-align:-.415em;
+  margin-inline:-.03em;
+  color:var(--em);
+}
+.rw__i{display:block;text-align:center;animation:rw-roll 6s cubic-bezier(.76,0,.24,1) infinite}
+.rw__i>span{display:block}
+@keyframes rw-roll{
+  0%,42%   {transform:translateY(0)}
+  50%,92%  {transform:translateY(-50%)}
+  100%     {transform:translateY(0)}
+}
+#why .head h2 em{color:var(--ink)}
+@media (prefers-reduced-motion:reduce){ .rw__i{animation:none} }
