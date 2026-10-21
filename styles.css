@@ -2461,11 +2461,14 @@ section.section h2.x-title em.x-brandword{font-style:normal}
    it keeps the mockup's composition and never reaches the laptop or case.
    861–1279px: the copy stacks above the full photograph. Phones unchanged. */
 @media (min-width:1280px){
-  .hero--scene{min-height:calc(100vw * 879 / 1789)}
+  .hero--scene{min-height:calc(100vw * 941 / 1672)}
   .hero__bg{inset:0}
   .hero__layer,.hero__layer[style]{inset:0;width:100%;transform:none!important}
+  /* the frame now carries the render's own 1672/941, the way the product
+     page's hero does, so cover has nothing left to trim and the carry handle
+     stays whole instead of being cut off at the top edge */
   .hero__layer img{
-    width:100%;height:100%;object-fit:cover;object-position:100% 100%;
+    width:100%;height:100%;object-fit:cover;object-position:100% 50%;
     -webkit-mask-image:none;mask-image:none;
   }
   .hero__wash{
@@ -2698,12 +2701,19 @@ section.section h2.x-title em.x-brandword--ink{color:inherit}
   font-size:clamp(.82rem,1vw,.98rem);line-height:1.5;
 }
 .cmp th,.cmp td{padding:clamp(10px,1.4vw,16px) clamp(12px,2vw,26px);text-align:left;vertical-align:middle}
-.cmp thead th{font-weight:500;letter-spacing:.08em;text-transform:uppercase;font-size:.72rem;color:var(--ink-faint);border-bottom:1px solid var(--rule-strong)}
+/* the header row names the two camps outright, so every row beneath it can
+   stay quiet and still be read as a side-by-side */
+.cmp thead th{
+  font-weight:600;letter-spacing:.1em;text-transform:uppercase;font-size:.76rem;
+  color:var(--ink-soft);padding-block:clamp(13px,1.6vw,19px);
+  border-bottom:1px solid var(--rule-strong);
+}
+.cmp thead th:nth-child(2){background:rgba(29,21,48,.045)}
 .cmp tbody th{font-weight:600;color:var(--ink-deep);width:30%}
 .cmp tbody td{color:var(--ink-soft);font-weight:300}
 .cmp tbody tr+tr th,.cmp tbody tr+tr td{border-top:1px solid var(--rule)}
 .cmp th:last-child,.cmp td:last-child{background:rgba(60,29,115,.06)}
-.cmp thead th:last-child{color:var(--purple)}
+.cmp thead th:last-child{color:#fff;background:var(--purple);border-bottom-color:var(--purple)}
 /* VETCARE's answer to each row, in the brand colour so the column reads as one */
 .cmp tbody td:last-child{color:var(--purple);font-weight:500}
 
@@ -2717,7 +2727,7 @@ section.section h2.x-title em.x-brandword--ink{color:inherit}
   border-radius:50%;background:rgba(60,29,115,.09);color:var(--purple);
 }
 .cmp__ico svg{width:57%;height:57%}
-.cmp__hico{flex:none;width:19px;height:19px;color:var(--ink-soft)}
+.cmp__hico{flex:none;width:19px;height:19px}
 @media (max-width:640px){
   .cmp tbody th{width:34%}
   .cmp th,.cmp td{padding:10px 12px}
@@ -2761,7 +2771,7 @@ section.section h2.x-title em.x-brandword--ink{color:inherit}
   margin-inline:-.03em;
   color:var(--em);
 }
-.rw__i{display:block;text-align:center;animation:rw-roll 6s cubic-bezier(.76,0,.24,1) infinite}
+.rw__i{display:block;text-align:center;animation:rw-roll 4s cubic-bezier(.76,0,.24,1) infinite}
 .rw__i>span{display:block}
 @keyframes rw-roll{
   0%,42%   {transform:translateY(0)}
